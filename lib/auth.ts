@@ -63,7 +63,9 @@ const authOptions: AuthOptions = {
       return baseUrl;
     },
     async session({ session, token }) {
-
+    
+        console.log(session)
+        
       if (!session || !session.user || !session.user.email) {
         return session
       }
@@ -72,6 +74,7 @@ const authOptions: AuthOptions = {
         where: { email: session.user?.email },
       })
 
+      session.user.id = userByEmail?.id
       session.user.name = userByEmail?.name
       session.user.twoFactorEnabled = userByEmail?.twoFactorEnabled
             

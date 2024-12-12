@@ -33,7 +33,7 @@ export default function Page() {
                 throw new Error(data.error)
             }
 
-            router.push('/auth/login')
+            router.push('/auth/login') 
         } catch (error) {
             setError(error instanceof Error ? error.message : 'Terjadi kesalahan')
         }
