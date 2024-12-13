@@ -12,6 +12,10 @@ export default async function Page() {
     }
 
     const news = await prisma.news.findMany({
+        where: {
+            authorID:session.user.id || ''
+        },
+        
         include: {
             category: true,
         },

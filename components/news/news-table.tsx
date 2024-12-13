@@ -20,11 +20,8 @@ import { formatDistance } from "date-fns"
 import { useRouter } from "next/navigation"
 import { Category, News, PrismaClient } from "@prisma/client"
 import prisma from "@/lib/prisma"
-
-async function deleteNews(id: string) {
-  // "use server"
-  await prisma.news.delete({ where: { id } })
-}
+import Link from "next/link"
+import { Router } from "next/router"
 
 interface NewsTableProps {
   news: {
@@ -47,9 +44,20 @@ export default function NewsTable({ news }: NewsTableProps) {
   const router = useRouter()
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this news item?")) {
-      await deleteNews(id)
-      router.refresh()
+    if (confirm("Are you surre to delete this news items?")) {
+      try {
+        const response = await fetch(`/api/news/${id}`, {
+          method: "DELETE"
+        })
+  
+        if (response.ok) {
+          router.refresh()
+        } else {
+          alert("Failed to delete news item")
+        }
+      } catch (error) {
+        alert("An Error Occured")
+      }
     }
   }
 
@@ -75,7 +83,11 @@ export default function NewsTable({ news }: NewsTableProps) {
         <TableBody>
           {news.map((item) => (
             <TableRow key={item.id}>
-              <TableCell>{item.title}</TableCell>
+              <TableCell>
+                <Link className="underline" href={`/news/${item.id}`}>
+                  {item.title}
+                </Link>
+              </TableCell>
               <TableCell>
                 {formatDistance(new Date(item.createdAt), new Date(), {
                   addSuffix: true,
