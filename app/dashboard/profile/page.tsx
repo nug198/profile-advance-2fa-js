@@ -1,11 +1,15 @@
-import { getSession } from "@/lib/auth"
+import LogoutButton from "@/components/logout-buttons"
+import { authOptions, getSession } from "@/lib/auth"
+import { getServerSession } from "next-auth"
+import Link from "next/link"
 
-const session = await getSession()
+// const session = await getSession()
+const session = await getServerSession(authOptions)
 
 export default async function Page() {    
-    // if (!session || !session.user.name || !session.user.email){
-    //     return null
-    // }
+    if (!session || !session.user|| !session.user.email){
+        return null
+    }
 
     return (
         <div className="max-w-4xl mx-auto p-6">
@@ -26,7 +30,20 @@ export default async function Page() {
                         }
                     </p>
                 </div>
+
+                {
+                 !session?.user.twoFactorEnabled && (
+                    <div className="mt-6">
+                        <Link className="bg-blue-500 text-white px-4 py-2 rounded" href={'/dashboard/settings'}>
+                            Aktifkan 2FA
+                        </Link>
+                    </div>
+                 )   
+                }
+
             </div>
+            
+            <LogoutButton/>
         </div>
     )
 }

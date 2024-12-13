@@ -32,6 +32,8 @@ export async function POST(request: Request) {
       token: code
     })
 
+    console.log(verified)
+
     if (!verified) {
       return NextResponse.json(
         { error: 'Kode tidak valid' },
